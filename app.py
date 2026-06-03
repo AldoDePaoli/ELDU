@@ -24,19 +24,18 @@ st.markdown(
 
 
 # 2. INICIALIZACIÓN DE LA API DE GEMINI
-# Intenta obtener la clave desde los secretos de Streamlit o un entorno seguro.
-# Si estás probando localmente, puedes reemplazar st.secrets.get con "TU_API_KEY" entre comillas.
-st.sidebar.markdown("### 🔑 Autenticación")
-api_key = st.sidebar.text_input("Ingresa tu Gemini API Key:", type="password", help="Consigue tu llave en Google AI Studio")
+# Primero intenta buscar la clave oculta en internet (Secrets)
+api_key = st.secrets.get("GEMINI_API_KEY", None)
 
+# Si no la encuentra (como cuando pruebas en tu PC), la pide en pantalla
 if not api_key:
-    st.info("👈 Por favor, ingresa tu Gemini API Key en la barra lateral para comenzar.")
-    st.stop()
+    st.sidebar.markdown("### 🔑 Autenticación")
+    api_key = st.sidebar.text_input("Ingresa tu Gemini API Key:", type="password")
 
 if api_key:
     client = genai.Client(api_key=api_key)
 else:
-    st.error("Por favor, ingresa una API Key de Gemini para continuar.")
+    st.info("👈 Por favor, ingresa tu Gemini API Key en la barra lateral para comenzar.")
     st.stop()
 
 # 3. PROMPT DEL SISTEMA (El cerebro médico-legal)
